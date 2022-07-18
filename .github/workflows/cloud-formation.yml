@@ -1,0 +1,17 @@
+name: CloudFormation Stack
+on: [push]
+jobs:
+  build-cloud-formation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::190546235283:role/GitHub-Actions-Role
+          aws-region: us-east-1
+      
+      - name: Deploy to AWS CloudFormation
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: BlazorJWT
+          template: cloudformation/root-stack.json

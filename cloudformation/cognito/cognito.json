@@ -1,0 +1,79 @@
+{
+    "Description": "Cognito Stack for BlazorJWT",
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Parameters": {
+        "userPoolName": {
+            "Type": "String",
+            "Default": "BlazorJWTUserPool"
+        },
+        "appClientName":{
+            "Type":"String",
+            "Default":"BlazorJWT"
+        },
+        "identityPoolName": {
+            "Type": "String",
+            "Default": "BlazorJWTIdentityPool"
+        },
+        "callbackUrls": {
+            "Type":"CommaDelimitedList",
+            "Default": ["https://localhost:7291/login-callback"]
+        }
+    },
+    "Conditions": {},
+    "Resources": {
+        "UserPool": {
+            "Type": "AWS::Cognito::UserPool",
+            "UpdateReplacePolicy" : "Retain",
+            "Properties": {
+                "UserPoolName": {"Ref":"userPoolName"},
+                "AdminCreateUserConfig": {
+                    "AllowAdminCreateUserOnly": true
+                }
+            }
+        },
+        "UserPoolAppClient": {
+            "Type": "AWS::Cognito::UserPoolClient",
+            "UpdateReplacePolicy" : "Retain",
+            "Properties": {
+                "UserPoolId": { "Ref": "UserPool" },
+                "ClientName": { "Ref": "appClientName" },
+                "GenerateSecret": false,
+                "SupportedIdentityProviders": ["COGNITO"],
+                "AllowedOAuthFlows": ["implicit"],
+                "AllowedOAuthFlowsUserPoolClient": true,
+                "EnableTokenRevocation": true,
+                "AllowedOAuthScopes": ["email","openid","profile","aws.cognito.signin.user.admin"],
+                "ExplicitAuthFlows":["ALLOW_USER_PASSWORD_AUTH","ALLOW_REFRESH_TOKEN_AUTH"],
+                "PreventUserExistenceErrors":"ENABLED",
+                "CallbackURLs": {"Ref":"callbackUrls"}
+            }
+        },
+        "IdentityPool": {
+            "Type" : "AWS::Cognito::IdentityPool",
+            "UpdateReplacePolicy" : "Retain",
+            "Properties" : {
+                "AllowClassicFlow" : false,
+                "AllowUnauthenticatedIdentities" : false,
+                "IdentityPoolName" : { "Ref":"identityPoolName" },
+                "CognitoIdentityProviders" : [ {
+                    "ClientId" : {"Ref":"UserPoolAppClient"},
+                    "ProviderName" : {"Fn::GetAtt":["UserPool","ProviderName"]}
+                }]
+            }
+        }
+    },
+    "Outputs": {
+        "UserPoolId": {
+            "Description": "Id for the user pool",
+            "Value": {"Ref": "UserPool"}
+        },
+        "UserPoolArn": {
+            "Description": "Arn for the user pool",
+            "Value": {"Fn::GetAtt": ["UserPool","Arn"]}
+        },
+        "UserPoolClientId": {
+            "Description": "Id for the user pool client app",
+            "Value": {"Ref": "UserPoolAppClient"}
+        }
+    }
+}

@@ -20,6 +20,8 @@ public class BlazorJwtServiceCollectionExtensionsShould:TestContextBase
         {
             var authStateProvider = Services.GetRequiredService<AuthenticationStateProvider>();
             var jwtTokenProvider = Services.GetRequiredService<IJwtTokenProvider>();
+            authStateProvider.ShouldNotBeNull();
+            jwtTokenProvider.ShouldNotBeNull();
         });
         
     }
