@@ -10,9 +10,9 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          audience: sts.amazonaws.com
           role-to-assume: arn:aws:iam::190546235283:role/GitHub-Actions-Role
           aws-region: us-east-1
+          role-session-name: github-actions
       
       - name: Deploy to AWS CloudFormation
         uses: aws-actions/aws-cloudformation-github-deploy@v1
