@@ -2,8 +2,14 @@
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "Root CloudFormation Stack for BlazorJWT",
     "Parameters": {
-        "templateBaseUrl": "",
-        "semVer": "0.0.0-dev"
+        "templateBaseUrl": {
+            "Type" : "String",
+            "Default" : "https://blazorjwt-cicd.s3.amazonaws.com/cloudformation/,"
+        },
+        "semVer": {
+            "Type": "String",
+            "Default": "0.0.0-dev"
+        }
     },
     "Resources": {
         "Cognito": {
