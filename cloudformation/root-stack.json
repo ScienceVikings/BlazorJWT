@@ -4,7 +4,7 @@
     "Parameters": {
         "templateBaseUrl": {
             "Type" : "String",
-            "Default" : "https://blazorjwt-cicd.s3.amazonaws.com/cloudformation/,"
+            "Default" : "https://blazorjwt-cicd.s3.amazonaws.com/cloudformation,"
         },
         "semVer": {
             "Type": "String",
