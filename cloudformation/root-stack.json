@@ -1,12 +1,15 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
     "Description": "Root CloudFormation Stack for BlazorJWT",
-    "Parameters": {},
+    "Parameters": {
+        "templateBaseUrl": "",
+        "semVer": "0.0.0-dev"
+    },
     "Resources": {
         "Cognito": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "TemplateURL": {"Fn::Join":["/",["cognito","cognito.json"]]},
+                "TemplateURL": {"Fn::Join":["/",[{"Ref":"templateBaseUrl"},{"Ref":"semVer"},"cognito","cognito.json"]]},
                 "Parameters": {}
             }
         }
