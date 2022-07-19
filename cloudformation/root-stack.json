@@ -6,7 +6,7 @@
         "Cognito": {
             "Type": "AWS::CloudFormation::Stack",
             "Properties": {
-                "TemplateURL": {"Fn::Join":["/",[{"Ref":"templateBaseUrl"},"cognito","cognito.json"]]},
+                "TemplateURL": {"Fn::Join":["/",["cognito","cognito.json"]]},
                 "Parameters": {}
             }
         }
