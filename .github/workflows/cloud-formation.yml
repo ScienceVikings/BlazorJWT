@@ -37,7 +37,7 @@ jobs:
         shell: bash
         run: |
           aws s3 mb s3://blazorjwt-cicd
-          aws cp ./cloudformation s3://blazorjwt-cicd/cloudformation/${{ outputs.gitversion.semVer }}/
+          aws cp ./cloudformation s3://blazorjwt-cicd/cloudformation/${{ steps.gitversion.outputs.semVer }}/
 
       - name: Deploy to AWS CloudFormation
         uses: aws-actions/aws-cloudformation-github-deploy@v1
@@ -45,4 +45,4 @@ jobs:
           name: BlazorJWT
           no-fail-on-empty-changeset: "1"
           template: cloudformation/root-stack.json
-          parameter-overrides: "templateBaseUrl=s3://blazorjwt-cicd/cloudformation/,semVer=${{ outputs.gitversion.semVer }}"
+          parameter-overrides: "templateBaseUrl=s3://blazorjwt-cicd/cloudformation/,semVer=${{ steps.gitversion.outputs.semVer }}"
