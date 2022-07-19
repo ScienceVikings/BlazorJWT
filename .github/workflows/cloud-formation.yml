@@ -37,7 +37,7 @@ jobs:
         shell: bash
         run: |
           aws s3 mb s3://blazorjwt-cicd
-          aws cp ./cloudformation s3://blazorjwt-cicd/cloudformation/${{ steps.gitversion.outputs.semVer }}/
+          aws cp "./cloudformation" "s3://blazorjwt-cicd/cloudformation/${{ steps.gitversion.outputs.semVer }}/" --recursive 
 
       - name: Deploy to AWS CloudFormation
         uses: aws-actions/aws-cloudformation-github-deploy@v1
