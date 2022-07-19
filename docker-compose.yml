@@ -1,0 +1,12 @@
+services:
+  cli:
+    build:
+      context: .
+      target: cli
+      dockerfile: BlazorJWT.Web.Infrastructure/Dockerfile
+      
+  infra:
+    build:
+      context: .
+      target: deploy
+      dockerfile: BlazorJWT.Web.Infrastructure/Dockerfile

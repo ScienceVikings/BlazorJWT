@@ -1,0 +1,33 @@
+﻿@page "/login"
+@inject JwtAuthStateProvider _authStateProvider
+@inject NavigationManager _navigationManager
+@inject IJwtUriProvider _uriProvider
+
+@if (IsAuthenticated)
+{
+    <h1>Welcome! You're logged in!</h1>
+}
+else
+{
+    <h1>Redirecting you to login...</h1>
+}
+
+@code {
+
+    private bool IsAuthenticated { get; set; } = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //THIS NEEDS TO GO INTO THE OPTIONS PATTERN
+        var clientId = "1bjns25a9duoqared0gqop9lbq";
+        var baseUrl = "https://blazor-jwt-login.sciencevikinglabs.com";
+        
+        IsAuthenticated = await _authStateProvider.IsAuthenticated();
+        if (!IsAuthenticated)
+        {
+            var url = await _uriProvider.GetLoginUri(baseUrl, clientId, $"{_navigationManager.BaseUri}login-callback");
+            _navigationManager.NavigateTo(url, true);
+        }
+    }
+
+}

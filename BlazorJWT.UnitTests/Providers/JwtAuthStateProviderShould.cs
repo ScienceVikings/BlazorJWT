@@ -46,6 +46,30 @@ public class JwtAuthStateProviderShould
     {
         var authState = await _authStateProvider.GetAuthenticationStateAsync();
         authState.User.Claims.Count().ShouldBe(0);
-        
+    }
+
+    [Test]
+    public async Task GetAuthenticatedStatusIfLoggedIn()
+    {
+        var basePath = "https://www.example.com/redirect_uri#";
+        var idToken = "id_token=ID_TOKEN";
+        var accessToken = "access_token=ACCESS_TOKEN";
+        var token_type = "token_type=bearer";
+        var expires_in = "expires_in=3600";
+        var state = "state=STATE";
+
+        var uri = basePath + $"{idToken}&{accessToken}&{token_type}&{expires_in}&{state}";
+        await _storageProvider.SetState("STATE");
+        await _tokenProvider.SetTokenFromUri(uri);
+
+        var isAuthed = await _authStateProvider.IsAuthenticated();
+        isAuthed.ShouldBeTrue();
+    }
+    
+    [Test]
+    public async Task GetAuthenticatedStatusIfLoggedOut()
+    {
+        var isAuthed = await _authStateProvider.IsAuthenticated();
+        isAuthed.ShouldBeFalse();
     }
 }

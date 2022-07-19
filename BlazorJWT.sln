@@ -14,6 +14,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorJWT.DependencyInjecti
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorJWT.Web", "BlazorJWT.Web\BlazorJWT.Web.csproj", "{74AA220C-658C-41B0-8E05-39EF850132E8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorJWT.Infrastructure", "BlazorJWT.Infrastructure\BlazorJWT.Infrastructure.csproj", "{1B4FCF42-4048-4E6D-8D87-C22621412A13}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorJWT.Web.Infrastructure", "BlazorJWT.Web.Infrastructure\BlazorJWT.Web.Infrastructure.csproj", "{9CD0E947-A106-4E1D-A8BD-7C2A39A18E75}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,5 +52,13 @@ Global
 		{74AA220C-658C-41B0-8E05-39EF850132E8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{74AA220C-658C-41B0-8E05-39EF850132E8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{74AA220C-658C-41B0-8E05-39EF850132E8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1B4FCF42-4048-4E6D-8D87-C22621412A13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B4FCF42-4048-4E6D-8D87-C22621412A13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B4FCF42-4048-4E6D-8D87-C22621412A13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B4FCF42-4048-4E6D-8D87-C22621412A13}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9CD0E947-A106-4E1D-A8BD-7C2A39A18E75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9CD0E947-A106-4E1D-A8BD-7C2A39A18E75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9CD0E947-A106-4E1D-A8BD-7C2A39A18E75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9CD0E947-A106-4E1D-A8BD-7C2A39A18E75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

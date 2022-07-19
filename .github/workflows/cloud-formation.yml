@@ -2,16 +2,47 @@ name: CloudFormation Stack
 on: [push]
 jobs:
   build-cloud-formation:
+    name: "Build CloudFormation Root Stack"
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: '5.x'
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+        with:
+          useConfigFile: true
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          role-to-assume: arn:aws:iam::190546235283:role/GitHub-Actions-Role
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
       
+      - name: Upload CloudFormation Templates
+        id: upload
+        shell: bash
+        run: |
+          aws s3 mb s3://blazorjwt-cicd
+          aws s3 cp "./cloudformation" "s3://blazorjwt-cicd/cloudformation/${{ steps.gitversion.outputs.semVer }}/" --recursive 
+
       - name: Deploy to AWS CloudFormation
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
           name: BlazorJWT
+          no-fail-on-empty-changeset: "1"
           template: cloudformation/root-stack.json
+          parameter-overrides: "templateBaseUrl=https://blazorjwt-cicd.s3.amazonaws.com/cloudformation,semVer=${{ steps.gitversion.outputs.semVer }}"

@@ -1,3 +1,4 @@
+using System;
 using System.Threading.Tasks;
 using BlazorJWT.Models;
 using Bunit;
@@ -24,6 +25,10 @@ public class StorageProviderShould:TestContextBase
         await storageProvider.SetToken(token);
 
         var returnedToken = await storageProvider.GetToken();
+        if (returnedToken == null)
+        {
+            throw new Exception("Returned token is unexpectedly null");
+        }
         returnedToken.AccessToken.ShouldBe(token.AccessToken);
         returnedToken.ExpiresIn.ShouldBe(token.ExpiresIn);
         returnedToken.IdToken.ShouldBe(token.IdToken);

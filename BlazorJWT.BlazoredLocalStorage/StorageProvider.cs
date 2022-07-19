@@ -18,9 +18,9 @@ public class StorageProvider:IStorageProvider
         return _localStorageService.SetItemAsync("JwtToken", jwtToken).AsTask();
     }
 
-    public Task<JwtToken> GetToken()
+    public Task<JwtToken?> GetToken()
     {
-        return _localStorageService.GetItemAsync<JwtToken>("JwtToken").AsTask();
+        return _localStorageService.GetItemAsync<JwtToken?>("JwtToken").AsTask();
     }
 
     public Task DeleteToken()

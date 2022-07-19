@@ -18,7 +18,7 @@ public class JwtAuthStateProvider:AuthenticationStateProvider
     public override async Task<AuthenticationState> GetAuthenticationStateAsync()
     {
         var token = await _tokenProvider.GetToken();
-        if (!token.IsLoggedIn)
+        if (token == null || !token.IsLoggedIn)
             return _loggedOutState;
 
         var claims = new List<Claim>()
@@ -31,5 +31,11 @@ public class JwtAuthStateProvider:AuthenticationStateProvider
         var identity = new ClaimsIdentity(claims, "Bearer");
         var loggedInState = new AuthenticationState(new ClaimsPrincipal(identity));
         return loggedInState;
+    }
+
+    public async Task<bool> IsAuthenticated()
+    {
+        var state = await GetAuthenticationStateAsync();
+        return state.User.Identity?.IsAuthenticated ?? false;
     }
 }
