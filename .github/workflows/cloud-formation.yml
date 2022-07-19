@@ -44,5 +44,5 @@ jobs:
         with:
           name: BlazorJWT
           no-fail-on-empty-changeset: "1"
-          template: s3://blazorjwt-cicd/cloudformation/${{ steps.gitversion.outputs.semVer }}/root-stack.json
-          parameter-overrides: "templateBaseUrl=s3://blazorjwt-cicd/cloudformation/,semVer=${{ steps.gitversion.outputs.semVer }}"
+          template: cloudformation/root-stack.json
+          parameter-overrides: "templateBaseUrl=https://blazorjwt-cicd.s3.amazonaws.com/cloudformation/,semVer=${{ steps.gitversion.outputs.semVer }}"
