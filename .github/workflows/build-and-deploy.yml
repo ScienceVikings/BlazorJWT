@@ -1,12 +1,9 @@
-name: CloudFormation Stack
+name: Build and Deploy CDK Stack
 on: [push]
 jobs:
   build-cloud-formation:
-    name: "Build CloudFormation Root Stack"
+    name: "Build and Deploy CDK Stack"
     runs-on: ubuntu-latest
-    permissions:
-      id-token: write
-      contents: read
     steps:
 
       - name: Checkout
@@ -32,17 +29,17 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
       
-      - name: Upload CloudFormation Templates
-        id: upload
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.x
+
+      - name: Deploy Infrastructure
+        id: deploy
         shell: bash
         run: |
+          dotnet publish -o publish BlazorJWT.Web
           aws s3 mb s3://blazorjwt-cicd
-          aws s3 cp "./cloudformation" "s3://blazorjwt-cicd/cloudformation/${{ steps.gitversion.outputs.semVer }}/" --recursive 
-
-      - name: Deploy to AWS CloudFormation
-        uses: aws-actions/aws-cloudformation-github-deploy@v1
-        with:
-          name: BlazorJWT
-          no-fail-on-empty-changeset: "1"
-          template: cloudformation/root-stack.json
-          parameter-overrides: "templateBaseUrl=https://blazorjwt-cicd.s3.amazonaws.com/cloudformation,semVer=${{ steps.gitversion.outputs.semVer }}"
+          aws s3 cp "./publish" "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}/" --recursive 
+          dotnet build -o infra BlazorJWT.Web.Infrastructure
+          dotnet infra/BlazorJWT.Web.Infrastructure.dll
