@@ -62,7 +62,7 @@ public class StaticSiteStack : NestedStack,IStackResource
                 Aliases = new []{_staticSiteStackOptions.DomainName},
                 SslMethod = SSLMethod.SNI
             }),
-            DefaultRootObject = "index.html",
+            DefaultRootObject = "/wwwroot/index.html",
             Enabled = true,
             HttpVersion = HttpVersion.HTTP1_1,
             EnableIpV6 = false,
@@ -92,13 +92,13 @@ public class StaticSiteStack : NestedStack,IStackResource
                 {
                     ErrorCode = 404,
                     ResponseCode = 200,
-                    ResponsePagePath = "/index.html"
+                    ResponsePagePath = "/wwwroot/index.html"
                 },
                 new CfnDistribution.CustomErrorResponseProperty()
                 {
                     ErrorCode = 403,
                     ResponseCode = 200,
-                    ResponsePagePath = "/index.html"
+                    ResponsePagePath = "/wwwroot/index.html"
                 }
             }
         };
