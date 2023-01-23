@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using BlazorJWT.Core.Providers;
 using Bunit;
 using Microsoft.AspNetCore.Components.Authorization;

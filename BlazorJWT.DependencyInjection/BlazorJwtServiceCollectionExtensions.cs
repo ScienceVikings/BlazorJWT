@@ -11,8 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             services.AddAuthorizationCore();
             services.AddScoped<JwtAuthStateProvider>();
-            services.AddScoped<AuthenticationStateProvider, JwtAuthStateProvider>(provider =>
-                provider.GetRequiredService<JwtAuthStateProvider>());
+            services.AddScoped<AuthenticationStateProvider, JwtAuthStateProvider>(provider => provider.GetRequiredService<JwtAuthStateProvider>());
             services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();
             services.AddScoped<IJwtUriProvider, JwtUriProvider>();
             services.AddScoped<IStorageProvider, T>();

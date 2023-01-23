@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using System.Web;
 using BlazorJWT.Core.Providers;

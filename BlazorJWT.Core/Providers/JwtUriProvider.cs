@@ -4,7 +4,7 @@ namespace BlazorJWT.Core.Providers;
 
 public interface IJwtUriProvider
 {
-    Task<string> GetLoginUri(string baseUrl, string clientId, string responseUrl);
+    Task<string> GetLoginUri(string baseUrl, string clientId, string responseUrl,List<string>? scope=null);
     Task<string> GetLogoutUri(string baseUrl, string clientId, string responseUrl);
 }
 
@@ -17,8 +17,11 @@ public class JwtUriProvider:IJwtUriProvider
         _storageProvider = storageProvider;
     }
     
-    public Task<string> GetLoginUri(string baseUrl, string clientId, string responseUrl)
+    public Task<string> GetLoginUri(string baseUrl, string clientId, string responseUrl,List<string>? scope = null)
     {
+
+        scope ??= new List<string>() { "profile", "email", "openid" };
+        
         var url = $"{baseUrl}/oauth2/authorize";
         var state = Guid.NewGuid();
 

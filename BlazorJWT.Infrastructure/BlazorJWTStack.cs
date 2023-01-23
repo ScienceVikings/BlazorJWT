@@ -1,5 +1,4 @@
 using Amazon.CDK;
-using Amazon.CDK.AWS.CertificateManager;
 using Amazon.CDK.AWS.Cognito;
 using Constructs;
 

@@ -1,8 +1,6 @@
-using Amazon.CDK;
-
 namespace BlazorJWT.Infrastructure;
 
-internal interface IStackResource
+public interface IStackResource
 {
     Task BuildStack();
 }
