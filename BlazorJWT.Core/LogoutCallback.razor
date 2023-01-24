@@ -1,0 +1,21 @@
+﻿@using BlazorJWT.Core.Providers
+
+@inject NavigationManager _navManager
+@inject IJwtTokenProvider _tokenProvider
+
+<div></div>
+
+@code {
+    /// <summary>
+    /// The Url to send the user to once the token is set.
+    /// </summary>
+    [Parameter]
+    public string ReturnUrl { get; set; } = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await _tokenProvider.DeleteToken();
+        _navManager.NavigateTo(ReturnUrl);
+    }
+
+}

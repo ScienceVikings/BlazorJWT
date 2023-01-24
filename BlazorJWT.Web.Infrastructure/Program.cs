@@ -21,7 +21,8 @@ var blazorStack = new BlazorJWTStack(rootStack, new BlazorJWTStackOptions()
     DomainName = "blazor-jwt-login.sciencevikinglabs.com", //The site we want to give to cognito (we call this to login)
     Certificate = Certificate.FromCertificateArn(rootStack, "BlazorJWT-Certificate", certArn),
     //The site that Cognito calls back to
-    OAuthCallbackUrls = new[] { "https://localhost:7166/login-callback", "https://blazor-jwt.sciencevikinglabs.com/login-callback" }
+    OAuthCallbackUrls = new[] { "https://localhost:7166/login-callback", "https://blazor-jwt.sciencevikinglabs.com/login-callback" },
+    OAuthSignOutUrls = new [] { "https://localhost:7166/logout-callback", "https://blazor-jwt.sciencevikinglabs.com/logout-callback" }
 });
 
 await blazorStack.BuildStack();

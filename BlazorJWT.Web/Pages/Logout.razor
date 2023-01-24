@@ -1,18 +1,18 @@
-﻿@page "/login"
+@page "/logout"
 @inject JwtAuthStateProvider _authStateProvider
 @inject NavigationManager _navigationManager
 @inject IJwtUriProvider _uriProvider
 
 @if (IsAuthenticated)
 {
-    <h1>Welcome! You're logged in!</h1>
+    <h1>Welcome! You're logged out!</h1>
     <div>
-        You can click <NavLink href="logout">here to log out</NavLink> if you'd like! :)
+        You can click <NavLink href="login">here to log in</NavLink> if you'd like! :)
     </div>
 }
 else
 {
-    <h1>Redirecting you to login...</h1>
+    <h1>Redirecting you to logout...</h1>
 }
 
 @code {
@@ -21,14 +21,14 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        //THIS NEEDS TO GO INTO THE OPTIONS PATTERN
+    //THIS NEEDS TO GO INTO THE OPTIONS PATTERN
         var clientId = "79jlu703i0pbud0oepeg0re49p";
         var baseUrl = "https://blazor-jwt-login.sciencevikinglabs.com";
         
         IsAuthenticated = await _authStateProvider.IsAuthenticated();
         if (!IsAuthenticated)
         {
-            var url = await _uriProvider.GetLoginUri(baseUrl, clientId, $"{_navigationManager.BaseUri}login-callback");
+            var url = await _uriProvider.GetLogoutUri(baseUrl, clientId, $"{_navigationManager.BaseUri}login-callback");
             _navigationManager.NavigateTo(url, true);
         }
     }

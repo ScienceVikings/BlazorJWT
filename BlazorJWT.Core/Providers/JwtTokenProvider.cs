@@ -9,6 +9,7 @@ public interface IJwtTokenProvider
     Task SetTokenFromUri(Uri uri);
     Task<JwtToken?> GetToken();
     Task SetState(string state);
+    Task DeleteToken();
 }
 
 public class JwtTokenProvider : IJwtTokenProvider
@@ -57,7 +58,7 @@ public class JwtTokenProvider : IJwtTokenProvider
         
         var state = await _storageProvider.GetState();
         if (token.State != state)
-            throw new Exception($"State does not match. Sent [{state}] Received [{token.State}]. Use IJwtTokenProvider.SetState to set the state of the");
+            throw new Exception($"State does not match. Sent [{state}] Received [{token.State}]. Use IJwtTokenProvider.SetState to set the state of the user");
 
         await _storageProvider.SetToken(token);
     }
@@ -67,8 +68,14 @@ public class JwtTokenProvider : IJwtTokenProvider
         return _storageProvider.GetToken();
     }
 
-    public Task SetState(string state)
+    public async Task SetState(string state)
     {
-        return _storageProvider.SetState(state);
+        await _storageProvider.SetState(state);
+    }
+
+    public async Task DeleteToken()
+    {
+        await _storageProvider.DeleteToken();
+        await _storageProvider.DeleteState();
     }
 }
