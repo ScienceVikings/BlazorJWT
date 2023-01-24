@@ -43,7 +43,12 @@ jobs:
           aws s3 cp --quiet "./publish/wwwroot" "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}/" --recursive
           aws s3 cp --quiet "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}" "s3://blazor-jwt-site" --recursive
 
-          export AWS_ACCESS_KEY_ID=${{secrets.AWS_ACCESS_KEY_ID}}
-          export AWS_SECRET_ACCESS_KEY=${{secrets.AWS_SECRET_ACCESS_KEY}}
+          creds="~/.aws/credentials"
 
-          docker-compose -f docker-compose.yml up --build infra
+          touch $creds
+
+          echo "[default]" > $creds
+          echo "aws_access_key_id = ${{secrets.AWS_ACCESS_KEY_ID}}" >> $creds
+          echo "aws_secret_access_key = ${{secrets.AWS_SECRET_ACCESS_KEY}}" >> $creds
+
+          docker-compose up --build infra
