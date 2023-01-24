@@ -15,7 +15,7 @@
     protected override async Task OnInitializedAsync()
     {
         await _tokenProvider.SetTokenFromUri(_navManager.Uri);
-        _navManager.NavigateTo(ReturnUrl);
+        _navManager.NavigateTo(ReturnUrl, true);
     }
 
 }

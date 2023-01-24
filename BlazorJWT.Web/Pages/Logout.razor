@@ -3,7 +3,7 @@
 @inject NavigationManager _navigationManager
 @inject IJwtUriProvider _uriProvider
 
-@if (IsAuthenticated)
+@if (!IsAuthenticated)
 {
     <h1>Welcome! You're logged out!</h1>
     <div>
@@ -26,9 +26,10 @@ else
         var baseUrl = "https://blazor-jwt-login.sciencevikinglabs.com";
         
         IsAuthenticated = await _authStateProvider.IsAuthenticated();
-        if (!IsAuthenticated)
+        if (IsAuthenticated)
         {
-            var url = await _uriProvider.GetLogoutUri(baseUrl, clientId, $"{_navigationManager.BaseUri}login-callback");
+            var url = await _uriProvider.GetLogoutUri(baseUrl, clientId, $"{_navigationManager.BaseUri}logout-callback");
+            
             _navigationManager.NavigateTo(url, true);
         }
     }

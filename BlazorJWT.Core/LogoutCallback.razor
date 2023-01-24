@@ -1,7 +1,8 @@
 ﻿@using BlazorJWT.Core.Providers
+@using Microsoft.AspNetCore.Components.Authorization
 
-@inject NavigationManager _navManager
-@inject IJwtTokenProvider _tokenProvider
+@inject NavigationManager NavManager
+@inject IJwtTokenProvider TokenProvider
 
 <div></div>
 
@@ -14,8 +15,8 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await _tokenProvider.DeleteToken();
-        _navManager.NavigateTo(ReturnUrl);
+        await TokenProvider.DeleteToken();
+        NavManager.NavigateTo(ReturnUrl, true);
     }
 
 }
