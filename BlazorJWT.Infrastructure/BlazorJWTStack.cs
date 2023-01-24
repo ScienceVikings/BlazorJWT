@@ -62,7 +62,8 @@ public class BlazorJWTStack : NestedStack, IStackResource
             {
                 Scopes = _options.OAuthScopes,
                 Flows = new OAuthFlows() { ImplicitCodeGrant = true },
-                CallbackUrls = _options.OAuthCallbackUrls
+                CallbackUrls = _options.OAuthCallbackUrls,
+                LogoutUrls = _options.OAuthSignOutUrls
             },
             EnableTokenRevocation = true,
             AuthFlows = new AuthFlow()

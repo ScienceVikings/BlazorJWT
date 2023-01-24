@@ -45,6 +45,10 @@
     protected override async Task OnInitializedAsync()
     {
         IsAuthenticated = await _authStateProvider.IsAuthenticated();
+        _authStateProvider.AuthenticationStateChanged += async _ =>
+        {
+            IsAuthenticated = await _authStateProvider.IsAuthenticated();
+        };
     }
 
 }

@@ -26,6 +26,7 @@ else
         var baseUrl = "https://blazor-jwt-login.sciencevikinglabs.com";
         
         IsAuthenticated = await _authStateProvider.IsAuthenticated();
+        
         if (!IsAuthenticated)
         {
             var url = await _uriProvider.GetLoginUri(baseUrl, clientId, $"{_navigationManager.BaseUri}login-callback");
