@@ -5,7 +5,7 @@ namespace BlazorJWT.Core.Providers;
 public interface IStorageProvider
 {
     Task SetToken(JwtToken jwtToken);
-    Task<JwtToken> GetToken();
+    Task<JwtToken?> GetToken();
     Task DeleteToken();
     Task SetState(string state);
     Task<string> GetState();

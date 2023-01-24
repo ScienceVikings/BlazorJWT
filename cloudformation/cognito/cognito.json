@@ -16,7 +16,7 @@
         },
         "callbackUrls": {
             "Type":"CommaDelimitedList",
-            "Default": ["https://localhost:7291/login-callback"]
+            "Default": "https://localhost:7291/login-callback"
         }
     },
     "Conditions": {},

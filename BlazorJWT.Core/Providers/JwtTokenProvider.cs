@@ -7,7 +7,7 @@ public interface IJwtTokenProvider
 {
     Task SetTokenFromUri(string uri);
     Task SetTokenFromUri(Uri uri);
-    Task<JwtToken> GetToken();
+    Task<JwtToken?> GetToken();
     Task SetState(string state);
 }
 
@@ -62,7 +62,7 @@ public class JwtTokenProvider : IJwtTokenProvider
         await _storageProvider.SetToken(token);
     }
 
-    public Task<JwtToken> GetToken()
+    public Task<JwtToken?> GetToken()
     {
         return _storageProvider.GetToken();
     }

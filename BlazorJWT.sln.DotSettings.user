@@ -1,10 +1,4 @@
 ﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
 	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=0429dfeb_002Dfc75_002D4ef0_002Da3eb_002D22f0859fc895/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="SetTokenFromUri" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;
-  &lt;TestAncestor&gt;
-    &lt;TestId&gt;NUnit3x::FB0385E3-42DE-4126-B4D1-935ABB3522DD::net6.0::BlazorJWT.UnitTests.Providers.JwtTokenProviderShould&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::FB0385E3-42DE-4126-B4D1-935ABB3522DD::net6.0::BlazorJWT.UnitTests.Providers.JwtAuthStateProviderShould&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::7078493B-ECBA-4598-A65E-171B3BC8D6C8::net6.0::BlazorJWT.BlazoredLocalStorage.UnitTests.StorageProviderShould.SetAndGetToken&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::7078493B-ECBA-4598-A65E-171B3BC8D6C8::net6.0::BlazorJWT.BlazoredLocalStorage.UnitTests.StorageProviderShould&lt;/TestId&gt;
-    &lt;TestId&gt;NUnit3x::B02EEAD7-D8EC-4854-862E-5FC246738C79::net6.0::BlazorJWT.DependencyInjection.UnitTests.BlazorJwtServiceCollectionExtensionsShould&lt;/TestId&gt;
-  &lt;/TestAncestor&gt;
+  &lt;Solution /&gt;
 &lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

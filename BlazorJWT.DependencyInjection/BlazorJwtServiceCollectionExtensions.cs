@@ -9,8 +9,11 @@ namespace Microsoft.Extensions.DependencyInjection
     {
         public static IServiceCollection AddBlazorJwtWithStorage<T>(this IServiceCollection services) where T : class, IStorageProvider
         {
-            services.AddScoped<AuthenticationStateProvider, JwtAuthStateProvider>();
+            services.AddAuthorizationCore();
+            services.AddScoped<JwtAuthStateProvider>();
+            services.AddScoped<AuthenticationStateProvider, JwtAuthStateProvider>(provider => provider.GetRequiredService<JwtAuthStateProvider>());
             services.AddScoped<IJwtTokenProvider, JwtTokenProvider>();
+            services.AddScoped<IJwtUriProvider, JwtUriProvider>();
             services.AddScoped<IStorageProvider, T>();
             return services;
         }
