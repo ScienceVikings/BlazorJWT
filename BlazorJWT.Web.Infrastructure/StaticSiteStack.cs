@@ -78,7 +78,11 @@ public class StaticSiteStack : NestedStack,IStackResource
                     {
                         Headers = new []{"Origin"},
                         QueryString = false
-                    }
+                    },
+                    DefaultTtl = Duration.Seconds(0),
+                    MinTtl = Duration.Seconds(0),
+                    MaxTtl = Duration.Seconds(0)
+                    // * * * I think if we make another behavior with the _framework/* path to have no cache it may work a bit better?
                 }},
                 S3OriginSource = new S3OriginConfig()
                 {
