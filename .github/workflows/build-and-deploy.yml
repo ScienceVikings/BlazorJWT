@@ -43,4 +43,4 @@ jobs:
           aws s3 cp --quiet "./publish/wwwroot" "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}/" --recursive
           aws s3 cp --quiet "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}" "s3://blazor-jwt-site" --recursive
 
-          docker-compose --build infra
+          docker-compose --build up infra
