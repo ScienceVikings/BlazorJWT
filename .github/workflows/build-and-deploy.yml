@@ -23,7 +23,7 @@ jobs:
           useConfigFile: true
 
       - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1.7.0
+        uses: aws-actions/configure-aws-credentials@v1-node16 # Getting rid of warnings
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -47,6 +47,6 @@ jobs:
           echo "aws_access_key_id = ${{secrets.AWS_ACCESS_KEY_ID}}" >> creds
           echo "aws_secret_access_key = ${{secrets.AWS_SECRET_ACCESS_KEY}}" >> creds
 
-          docker-compose create --build infra
-          docker-compose cp creds infra:/root/.aws/credentials
-          docker-compose start infra
+          docker compose create --build infra
+          docker compose cp creds infra:/root/.aws/credentials
+          docker compose start infra
