@@ -44,7 +44,7 @@ jobs:
           versionSpec: '5.x'
 
       - name: Determine Version
-        id: gitversion
+        id: version
         uses: gittools/actions/gitversion/execute@v0.9.15
         with:
           useConfigFile: true
@@ -83,7 +83,7 @@ jobs:
             versionSpec: '5.x'
 
         - name: Determine Version
-          id: gitversion
+          id: version
           uses: gittools/actions/gitversion/execute@v0.9.15
           with:
             useConfigFile: true
