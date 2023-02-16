@@ -22,14 +22,15 @@ jobs:
     name: "Deploy NuGet Package"
     runs-on: ubuntu-latest
     needs: [build-and-test]
-    matrix:
-      project: [
-        "BlazorJWT.BlazoredLocalStorage",
-        "BlazorJWT.DependencyInjection",
-        "BlazorJWT.Infrastructure",
-        "BlazorJWT.Core",
-        "BlazorJWT"
-      ]
+    strategy:
+      matrix:
+        project: [
+          "BlazorJWT.BlazoredLocalStorage",
+          "BlazorJWT.DependencyInjection",
+          "BlazorJWT.Infrastructure",
+          "BlazorJWT.Core",
+          "BlazorJWT"
+        ]
     steps:
 
       - name: Checkout
