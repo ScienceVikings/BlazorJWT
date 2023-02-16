@@ -44,8 +44,8 @@ public class JwtUriProviderShould
         var logoutUri = await _uriProvider.GetLogoutUri(baseUrl, clientId, responseUrl);
         
         var expected =
-            $"{baseUrl}/logout?client_id={clientId}&logout_uri={HttpUtility.HtmlEncode(responseUrl)}";
-
+            $"{baseUrl}/logout?response_type=token&client_id={clientId}&logout_uri={HttpUtility.HtmlEncode(responseUrl)}";
+        
         logoutUri.ShouldBe(expected);
     }
 }

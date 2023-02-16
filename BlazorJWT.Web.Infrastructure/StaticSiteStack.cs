@@ -54,56 +54,43 @@ public class StaticSiteStack : NestedStack,IStackResource
             }
         }));
         var cert = Certificate.FromCertificateArn(this,"Certificate",_staticSiteStackOptions.CertificateArn);
-        
-        var cloudFrontProps = new CloudFrontWebDistributionProps()
+       
+        var dist = new Distribution(this, "CloudFrontDistribution", new DistributionProps()
         {
-            ViewerCertificate = ViewerCertificate.FromAcmCertificate(cert,new ViewerCertificateOptions()
+            Certificate = cert,
+            DefaultBehavior = new BehaviorOptions()
             {
-                Aliases = new []{_staticSiteStackOptions.DomainName},
-                SslMethod = SSLMethod.SNI
-            }),
+                AllowedMethods = AllowedMethods.ALLOW_GET_HEAD_OPTIONS,
+                CachePolicy = CachePolicy.CACHING_DISABLED,
+                OriginRequestPolicy = OriginRequestPolicy.CORS_S3_ORIGIN
+            },
             DefaultRootObject = "/index.html",
             Enabled = true,
-            HttpVersion = HttpVersion.HTTP1_1,
-            EnableIpV6 = false,
-            PriceClass = PriceClass.PRICE_CLASS_ALL,
-            OriginConfigs = new ISourceConfiguration[]{new SourceConfiguration()
-            {
-                Behaviors = new IBehavior[]{new Behavior()
+            PriceClass = PriceClass.PRICE_CLASS_100,
+            ErrorResponses = new IErrorResponse[]{
+                new ErrorResponse()
                 {
-                    AllowedMethods = CloudFrontAllowedMethods.GET_HEAD_OPTIONS,
-                    ViewerProtocolPolicy = ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
-                    IsDefaultBehavior = true,
-                    ForwardedValues = new CfnDistribution.ForwardedValuesProperty()
-                    {
-                        Headers = new []{"Origin"},
-                        QueryString = false
-                    }
-                }},
-                S3OriginSource = new S3OriginConfig()
-                {
-                    OriginAccessIdentity = cloudFrontOriginAccessIdentity,
-                    S3BucketSource = bucket
-                }
-            }},
-            ErrorConfigurations = new CfnDistribution.ICustomErrorResponseProperty[]
-            {
-                new CfnDistribution.CustomErrorResponseProperty()
-                {
-                    ErrorCode = 404,
-                    ResponseCode = 200,
-                    ResponsePagePath = "/index.html"
+                    HttpStatus = 404,
+                    ResponseHttpStatus = 404,
+                    ResponsePagePath = "/not-found",
+                    Ttl = Duration.Seconds(0)
                 },
-                new CfnDistribution.CustomErrorResponseProperty()
+                new ErrorResponse()
                 {
-                    ErrorCode = 403,
-                    ResponseCode = 200,
-                    ResponsePagePath = "/index.html"
+                    HttpStatus = 500,
+                    ResponseHttpStatus = 500,
+                    ResponsePagePath = "/server-error",
+                    Ttl = Duration.Seconds(0)
+                },
+                new ErrorResponse()
+                {
+                    HttpStatus = 403,
+                    ResponseHttpStatus = 403,
+                    ResponsePagePath = "/forbidden",
+                    Ttl = Duration.Seconds(0)
                 }
             }
-        };
-        
-        var cloudFront = new CloudFrontWebDistribution(this, "CloudFrontWebDistribution", cloudFrontProps);
+        });
         
         return Task.CompletedTask;
     }

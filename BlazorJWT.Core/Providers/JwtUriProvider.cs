@@ -47,6 +47,7 @@ public class JwtUriProvider:IJwtUriProvider
         _storageProvider.SetState("");
         var queryParams = new string[]
         {
+            "response_type=token",
             $"client_id={clientId}",
             $"logout_uri={HttpUtility.HtmlEncode(responseUrl)}",
         };

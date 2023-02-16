@@ -23,6 +23,7 @@ public class BlazorJWTStackOptions
         { OAuthScope.EMAIL, OAuthScope.OPENID, OAuthScope.COGNITO_ADMIN, OAuthScope.PROFILE };
     
     public string[] OAuthCallbackUrls { get; set; } = Array.Empty<string>();
+    public string[] OAuthSignOutUrls { get; set; } = Array.Empty<string>();
 
     public string IdentityPoolName { get; set; } = "IdentityPool";
     public bool AllowUnauthenticatedIdentities { get; set; } = false;

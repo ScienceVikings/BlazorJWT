@@ -1,9 +1,36 @@
-name: Build and Deploy CDK Stack
+name: Build and Deploy
 on: [push]
 jobs:
-  build-cloud-formation:
-    name: "Build and Deploy CDK Stack"
+  build-and-test:
+    name: "Build and Test"
     runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3      
+      
+      - name: Setup dotnet
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.x
+
+      - name: Test
+        run: |
+          dotnet test BlazorJWT.sln
+
+  deploy-nuget-packages:
+    name: "Deploy NuGet Package"
+    runs-on: ubuntu-latest
+    needs: [build-and-test]
+    strategy:
+      matrix:
+        project: [
+          "BlazorJWT.BlazoredLocalStorage",
+          "BlazorJWT.DependencyInjection",
+          "BlazorJWT.Infrastructure",
+          "BlazorJWT.Core",
+          "BlazorJWT"
+        ]
     steps:
 
       - name: Checkout
@@ -17,30 +44,64 @@ jobs:
           versionSpec: '5.x'
 
       - name: Determine Version
-        id: gitversion
+        id: version
         uses: gittools/actions/gitversion/execute@v0.9.15
         with:
           useConfigFile: true
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16 # Getting rid of warnings
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-      
-      - name: Setup dotnet
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: 6.x
-
-      - name: Deploy Infrastructure
-        id: deploy
+      - name: Build Release Package
         shell: bash
         run: |
-          dotnet publish -o publish BlazorJWT.Web
-          aws s3 mb s3://blazorjwt-cicd
-          aws s3 cp --quiet "./publish/wwwroot" "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}/" --recursive
-          aws s3 cp --quiet "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}" "s3://blazor-jwt-site" --recursive
+          
+          mkdir -p packages
+          dotnet pack --configuration Release -o packages /p:VERSION="${{ steps.version.outputs.semVer }}"
 
-          docker-compose up --build infra
+          dotnet nuget push "packages/${{ matrix.project }}.${{ steps.version.outputs.semVer }}.nupkg" \
+            --api-key "${{ secrets.GITHUB_TOKEN }}" \
+            --source "https://nuget.pkg.github.com/ScienceVikings/index.json" \
+            --skip-duplicate
+
+          dotnet nuget push "packages/${{ matrix.project }}.${{ steps.version.outputs.semVer }}.nupkg" \
+            --api-key "${{ secrets.NUGET_API_KEY }}" \
+            --source "https://api.nuget.org/v3/index.json" \
+            --skip-duplicate
+
+  deploy-infra:
+    name: "Deploy Infrastructure"
+    runs-on: "ubuntu-latest"
+    needs: [build-and-test]
+    steps:
+
+        - name: Checkout
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
+
+        - name: Install GitVersion
+          uses: gittools/actions/gitversion/setup@v0.9.15
+          with:
+            versionSpec: '5.x'
+
+        - name: Determine Version
+          id: version
+          uses: gittools/actions/gitversion/execute@v0.9.15
+          with:
+            useConfigFile: true
+
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v1-node16 # Getting rid of warnings
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: us-east-1
+
+        - name: Deploy Infrastructure
+          id: deploy
+          shell: bash
+          run: |
+            dotnet publish -o publish BlazorJWT.Web
+            aws s3 mb s3://blazorjwt-cicd
+            aws s3 cp --quiet "./publish/wwwroot" "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}/" --recursive
+            aws s3 cp --quiet "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}" "s3://blazor-jwt-site" --recursive
+
+            docker-compose up --build infra
