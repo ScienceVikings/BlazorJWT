@@ -21,7 +21,7 @@ jobs:
   deploy-nuget-packages:
     name: "Deploy NuGet Package"
     runs-on: ubuntu-latest
-    depends-on: [build-and-test]
+    needs: [build-and-test]
     matrix:
       project: [
         "BlazorJWT.BlazoredLocalStorage",
@@ -68,7 +68,7 @@ jobs:
 deploy-infra:
   name: "Deploy Infrastructure"
   runs-on: "ubuntu-latest"
-  depends-on: [build-and-test]
+  needs: [build-and-test]
   steps:
 
       - name: Checkout
