@@ -66,42 +66,42 @@ jobs:
             --source "https://api.nuget.org/v3/index.json" \
             --skip-duplicate
 
-deploy-infra:
-  name: "Deploy Infrastructure"
-  runs-on: "ubuntu-latest"
-  needs: [build-and-test]
-  steps:
+  deploy-infra:
+    name: "Deploy Infrastructure"
+    runs-on: "ubuntu-latest"
+    needs: [build-and-test]
+    steps:
 
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
+        - name: Checkout
+          uses: actions/checkout@v3
+          with:
+            fetch-depth: 0
 
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v0.9.15
-        with:
-          versionSpec: '5.x'
+        - name: Install GitVersion
+          uses: gittools/actions/gitversion/setup@v0.9.15
+          with:
+            versionSpec: '5.x'
 
-      - name: Determine Version
-        id: gitversion
-        uses: gittools/actions/gitversion/execute@v0.9.15
-        with:
-          useConfigFile: true
+        - name: Determine Version
+          id: gitversion
+          uses: gittools/actions/gitversion/execute@v0.9.15
+          with:
+            useConfigFile: true
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16 # Getting rid of warnings
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+        - name: Configure AWS Credentials
+          uses: aws-actions/configure-aws-credentials@v1-node16 # Getting rid of warnings
+          with:
+            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+            aws-region: us-east-1
 
-      - name: Deploy Infrastructure
-        id: deploy
-        shell: bash
-        run: |
-          dotnet publish -o publish BlazorJWT.Web
-          aws s3 mb s3://blazorjwt-cicd
-          aws s3 cp --quiet "./publish/wwwroot" "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}/" --recursive
-          aws s3 cp --quiet "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}" "s3://blazor-jwt-site" --recursive
+        - name: Deploy Infrastructure
+          id: deploy
+          shell: bash
+          run: |
+            dotnet publish -o publish BlazorJWT.Web
+            aws s3 mb s3://blazorjwt-cicd
+            aws s3 cp --quiet "./publish/wwwroot" "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}/" --recursive
+            aws s3 cp --quiet "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}" "s3://blazor-jwt-site" --recursive
 
-          docker-compose up --build infra
+            docker-compose up --build infra
