@@ -7,27 +7,7 @@ jobs:
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Install GitVersion
-        uses: gittools/actions/gitversion/setup@v0.9.15
-        with:
-          versionSpec: '5.x'
-
-      - name: Determine Version
-        id: gitversion
-        uses: gittools/actions/gitversion/execute@v0.9.15
-        with:
-          useConfigFile: true
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1-node16 # Getting rid of warnings
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
+        uses: actions/checkout@v3      
       
       - name: Setup dotnet
         uses: actions/setup-dotnet@v3
@@ -52,6 +32,22 @@ jobs:
       ]
     step:
 
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.15
+        with:
+          versionSpec: '5.x'
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.15
+        with:
+          useConfigFile: true
+
       - name: Build Release Package
         shell: bash
         run: |
@@ -69,6 +65,35 @@ jobs:
             --source "https://api.nuget.org/v3/index.json" \
             --skip-duplicate
 
+deploy-infra:
+  name: "Deploy Infrastructure"
+  runs-on: "ubuntu-latest"
+  depends-on: [build-and-test]
+  steps:
+
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.15
+        with:
+          versionSpec: '5.x'
+
+      - name: Determine Version
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.15
+        with:
+          useConfigFile: true
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1-node16 # Getting rid of warnings
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+
       - name: Deploy Infrastructure
         id: deploy
         shell: bash
@@ -79,4 +104,3 @@ jobs:
           aws s3 cp --quiet "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}" "s3://blazor-jwt-site" --recursive
 
           docker-compose up --build infra
-
