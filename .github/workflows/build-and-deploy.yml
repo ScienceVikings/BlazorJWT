@@ -1,8 +1,8 @@
-name: Build and Deploy CDK Stack
+name: Build and Deploy
 on: [push]
 jobs:
-  build-cloud-formation:
-    name: "Build and Deploy CDK Stack"
+  build-and-test:
+    name: "Build and Test"
     runs-on: ubuntu-latest
     steps:
 
@@ -34,6 +34,41 @@ jobs:
         with:
           dotnet-version: 6.x
 
+      - name: Test
+        run: |
+          dotnet test BlazorJWT.sln
+
+  deploy-nuget-packages:
+    name: "Deploy NuGet Package"
+    runs-on: ubuntu-latest
+    depends-on: [build-and-test]
+    matrix:
+      project: [
+        "BlazorJWT.BlazoredLocalStorage",
+        "BlazorJWT.DependencyInjection",
+        "BlazorJWT.Infrastructure",
+        "BlazorJWT.Core",
+        "BlazorJWT"
+      ]
+    step:
+
+      - name: Build Release Package
+        shell: bash
+        run: |
+          
+          mkdir -p packages
+          dotnet pack --configuration Release -o packages /p:VERSION="${{ steps.version.outputs.semVer }}"
+
+          dotnet nuget push "packages/${{ matrix.project }}.${{ steps.version.outputs.semVer }}.nupkg" \
+            --api-key "${{ secrets.GITHUB_TOKEN }}" \
+            --source "https://nuget.pkg.github.com/ScienceVikings/index.json" \
+            --skip-duplicate
+
+          dotnet nuget push "packages/${{ matrix.project }}.${{ steps.version.outputs.semVer }}.nupkg" \
+            --api-key "${{ secrets.NUGET_API_KEY }}" \
+            --source "https://api.nuget.org/v3/index.json" \
+            --skip-duplicate
+
       - name: Deploy Infrastructure
         id: deploy
         shell: bash
@@ -44,3 +79,4 @@ jobs:
           aws s3 cp --quiet "s3://blazorjwt-cicd/site/${{ steps.gitversion.outputs.semVer }}" "s3://blazor-jwt-site" --recursive
 
           docker-compose up --build infra
+
